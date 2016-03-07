@@ -75,7 +75,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/08/Hello-Hexo/" data-id="cilicau3q00002a4nj1tp9538" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/08/Hello-Hexo/" data-id="cilicfr9000009c4ngyunb3qz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -120,7 +120,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/08/hello-world/" data-id="cilicau3z00022a4n8hg4bi6b" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/08/hello-world/" data-id="cilicfr9500019c4nbnoolgar" class="article-share-link">Share</a>
       
       
     </footer>
@@ -152,19 +152,19 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>#####1.新建Xcode工程(GitUploadTest)</p>
-<p>#####2.切换到工程目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$cd .../GitUploadTest</span><br></pre></td></tr></table></figure></p>
-<p>#####3.初始化代码仓库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$git init</span><br></pre></td></tr></table></figure></p>
-<p>#####4.添加文件到仓库的缓存区（从工作目录添加到缓存区）。<br>在此之前需要做的是添加gitignore文件，如果不添加的话会在将来的开发使用中造成很多不必要的错误。添加方法也很简单，在Github上下载对应的gitignore文件，此处对应的是Objective-C.gitignore。下载完成后把文件放到对应的工程目录根目录下，并将文件名删除。</p>
+        <p>###1.新建Xcode工程(GitUploadTest)</p>
+<p>###2.切换到工程目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$cd .../GitUploadTest</span><br></pre></td></tr></table></figure></p>
+<p>###3.初始化代码仓库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$git init</span><br></pre></td></tr></table></figure></p>
+<p>###4.添加文件到仓库的缓存区（从工作目录添加到缓存区）。<br>在此之前需要做的是添加gitignore文件，如果不添加的话会在将来的开发使用中造成很多不必要的错误。添加方法也很简单，在Github上下载对应的gitignore文件，此处对应的是Objective-C.gitignore。下载完成后把文件放到对应的工程目录根目录下，并将文件名删除。</p>
 <p>在此之前我们可以先看看文件的状态：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$git status</span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">Initial commit</span><br><span class="line"></span><br><span class="line">Untracked files:</span><br><span class="line">  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)</span><br><span class="line"></span><br><span class="line">	.gitignore</span><br><span class="line">	GitUploadTest.xcodeproj/</span><br><span class="line">	GitUploadTest/</span><br><span class="line">	GitUploadTestTests/</span><br><span class="line">	GitUploadTestUITests/</span><br></pre></td></tr></table></figure>
 <p>Untracked files:表示下面所显示的文件都没有添加到git，git无法对其进行跟踪。<br>下面就把上面的Untracked files add 到git的版本管理中。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">$ git add .</span><br><span class="line">$ git status </span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">Initial commit</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use &quot;git rm --cached &lt;file&gt;...&quot; to unstage)</span><br><span class="line"></span><br><span class="line">	new file:   .gitignore</span><br><span class="line">	new file:   GitUploadTest.xcodeproj/project.pbxproj</span><br><span class="line">	new file:   GitUploadTest.xcodeproj/project.xcworkspace/contents.xcworkspacedata</span><br><span class="line">	new file:   GitUploadTest/AppDelegate.swift</span><br><span class="line">	new file:   GitUploadTest/Assets.xcassets/AppIcon.appiconset/Contents.json</span><br><span class="line">	new file:   GitUploadTest/Base.lproj/LaunchScreen.storyboard</span><br><span class="line">	new file:   GitUploadTest/Base.lproj/Main.storyboard</span><br><span class="line">	new file:   GitUploadTest/Info.plist</span><br><span class="line">	new file:   GitUploadTest/ViewController.swift</span><br><span class="line">	new file:   GitUploadTestTests/GitUploadTestTests.swift</span><br><span class="line">	new file:   GitUploadTestTests/Info.plist</span><br><span class="line">	new file:   GitUploadTestUITests/GitUploadTestUITests.swift</span><br><span class="line">	new file:   GitUploadTestUITests/Info.plist</span><br></pre></td></tr></table></figure>
 <p>“git add .”表示把当前目录下的所有文件，文件夹及文件夹中的子文件，以此类推，简单点说，也就是把当前目录下的所有文件都纳入git的管理中。</p>
-<p>#####5.将所做的更改从缓存区提交到HEAD</p>
+<p>###5.将所做的更改从缓存区提交到HEAD</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">$git commit -m &quot;init project&quot;</span><br><span class="line">[master (root-commit) 4c7691a] init project</span><br><span class="line"> 13 files changed, 875 insertions(+)</span><br><span class="line"> create mode 100644 .gitignore</span><br><span class="line"> create mode 100644 GitUploadTest.xcodeproj/project.pbxproj</span><br><span class="line"> create mode 100644 GitUploadTest.xcodeproj/project.xcworkspace/contents.xcworkspacedata</span><br><span class="line"> create mode 100644 GitUploadTest/AppDelegate.swift</span><br><span class="line"> create mode 100644 GitUploadTest/Assets.xcassets/AppIcon.appiconset/Contents.json</span><br><span class="line"> create mode 100644 GitUploadTest/Base.lproj/LaunchScreen.storyboard</span><br><span class="line"> create mode 100644 GitUploadTest/Base.lproj/Main.storyboard</span><br><span class="line"> create mode 100644 GitUploadTest/Info.plist</span><br><span class="line"> create mode 100644 GitUploadTest/ViewController.swift</span><br><span class="line"> create mode 100644 GitUploadTestTests/GitUploadTestTests.swift</span><br><span class="line"> create mode 100644 GitUploadTestTests/Info.plist</span><br><span class="line"> create mode 100644 GitUploadTestUITests/GitUploadTestUITests.swift</span><br><span class="line"> create mode 100644 GitUploadTestUITests/Info.plist</span><br><span class="line"> </span><br><span class="line">$git status</span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working directory clean</span><br></pre></td></tr></table></figure>
 <p>此时我们已经把所做的更改从缓存区提交到了HEAD。</p>
-<p>#####6.创建Github仓库</p>
+<p>###6.创建Github仓库</p>
 <ul>
 <li><p>StepOne：<br>  在浏览器中输入<a href="https://github.com/wdxgtsh?tab=repositories,点击右上角的New，如图所示：" target="_blank" rel="external">https://github.com/wdxgtsh?tab=repositories,点击右上角的New，如图所示：</a><br>  <img src="https://github.com/wdxgtsh/GitUploadTest/blob/master/src/add%20new%20repositories.png?raw=true" alt="创建仓库"></p>
 </li>
@@ -173,14 +173,14 @@
 <li><p>StepThree:点击Create repository，就创建好仓库了。获取到SSH：git@github.com:wdxgtsh/GitUploadTest.git。结果如图所示：<br> <img src="https://github.com/wdxgtsh/GitUploadTest/blob/master/src/create_finish.png?raw=true" alt="未上传工程的仓库"></p>
 </li>
 </ul>
-<p>#####7.在git中创建主干线<br>在git中创建主干线有两种方式，一种是SSH方式，需要配置SSH，在这里就不再赘述，不知道怎么配置的可以自行谷歌。另外一种是https，此法比较繁琐。再次也不予介绍（需要多次输入账户和密码）。</p>
+<p>###7.在git中创建主干线<br>在git中创建主干线有两种方式，一种是SSH方式，需要配置SSH，在这里就不再赘述，不知道怎么配置的可以自行谷歌。另外一种是https，此法比较繁琐。再次也不予介绍（需要多次输入账户和密码）。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$git remote add origin git@github.com:wdxgtsh/GitUploadTest.git</span><br></pre></td></tr></table></figure>
-<p>#####8.将本地的项目push到Github上。</p>
+<p>###8.将本地的项目push到Github上。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$git push origin master</span><br></pre></td></tr></table></figure>
 <p>此时，查看Github上的仓库。如下所示：<br><img src="https://github.com/wdxgtsh/GitUploadTest/blob/master/src/push_result.png?raw=true" alt="上传工程完毕后的仓库"></p>
-<p>#####9.将Github上的代码更新到本地</p>
+<p>###9.将Github上的代码更新到本地</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$git pull origin master</span><br></pre></td></tr></table></figure>
-<p>####注：以上所有在命令行中输入的命令都是在XCode项目的根目录下。</p>
+<p>###注：以上所有在命令行中输入的命令都是在XCode项目的根目录下。</p>
 <ul>
 <li>QQ：729376398</li>
 <li>QQ群：541862523</li>
@@ -190,7 +190,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/03/08/上传代码到Github/" data-id="cilicau4100032a4ntgta4taw" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/03/08/上传代码到Github/" data-id="cilicfr9a00039c4n03lm9sin" class="article-share-link">Share</a>
       
       
     </footer>
@@ -242,7 +242,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/02/08/OC中的description方法/" data-id="cilicau3w00012a4ncm3vk2x5" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/02/08/OC中的description方法/" data-id="cilicfr9800029c4n6y1mqadu" class="article-share-link">Share</a>
       
       
     </footer>
