@@ -75,7 +75,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/08/Hello-Hexo/" data-id="cilibxayh0000i64notqjmo69" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/08/Hello-Hexo/" data-id="cilic1wyn0000p44nsq8tbwe0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -120,7 +120,109 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/08/hello-world/" data-id="cilibxayn0001i64nrxk5jme5" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/08/hello-world/" data-id="cilic1wyt0001p44ns4zdmq2d" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-2016-02-20-上传代码到Github" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/08/2016-02-20-上传代码到Github/" class="article-date">
+  <time datetime="2016-03-07T16:37:45.000Z" itemprop="datePublished">2016-03-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#####1.新建Xcode工程(GitUploadTest)</p>
+<p>#####2.切换到工程目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$cd .../GitUploadTest</span><br></pre></td></tr></table></figure></p>
+<p>#####3.初始化代码仓库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$git init</span><br></pre></td></tr></table></figure></p>
+<p>#####4.添加文件到仓库的缓存区（从工作目录添加到缓存区）。<br>在此之前需要做的是添加gitignore文件，如果不添加的话会在将来的开发使用中造成很多不必要的错误。添加方法也很简单，在Github上下载对应的gitignore文件，此处对应的是Objective-C.gitignore。下载完成后把文件放到对应的工程目录根目录下，并将文件名删除。</p>
+<p>在此之前我们可以先看看文件的状态：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$git status</span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">Initial commit</span><br><span class="line"></span><br><span class="line">Untracked files:</span><br><span class="line">  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)</span><br><span class="line"></span><br><span class="line">	.gitignore</span><br><span class="line">	GitUploadTest.xcodeproj/</span><br><span class="line">	GitUploadTest/</span><br><span class="line">	GitUploadTestTests/</span><br><span class="line">	GitUploadTestUITests/</span><br></pre></td></tr></table></figure>
+<p>Untracked files:表示下面所显示的文件都没有添加到git，git无法对其进行跟踪。<br>下面就把上面的Untracked files add 到git的版本管理中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">$ git add .</span><br><span class="line">$ git status </span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">Initial commit</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use &quot;git rm --cached &lt;file&gt;...&quot; to unstage)</span><br><span class="line"></span><br><span class="line">	new file:   .gitignore</span><br><span class="line">	new file:   GitUploadTest.xcodeproj/project.pbxproj</span><br><span class="line">	new file:   GitUploadTest.xcodeproj/project.xcworkspace/contents.xcworkspacedata</span><br><span class="line">	new file:   GitUploadTest/AppDelegate.swift</span><br><span class="line">	new file:   GitUploadTest/Assets.xcassets/AppIcon.appiconset/Contents.json</span><br><span class="line">	new file:   GitUploadTest/Base.lproj/LaunchScreen.storyboard</span><br><span class="line">	new file:   GitUploadTest/Base.lproj/Main.storyboard</span><br><span class="line">	new file:   GitUploadTest/Info.plist</span><br><span class="line">	new file:   GitUploadTest/ViewController.swift</span><br><span class="line">	new file:   GitUploadTestTests/GitUploadTestTests.swift</span><br><span class="line">	new file:   GitUploadTestTests/Info.plist</span><br><span class="line">	new file:   GitUploadTestUITests/GitUploadTestUITests.swift</span><br><span class="line">	new file:   GitUploadTestUITests/Info.plist</span><br></pre></td></tr></table></figure>
+<p>“git add .”表示把当前目录下的所有文件，文件夹及文件夹中的子文件，以此类推，简单点说，也就是把当前目录下的所有文件都纳入git的管理中。</p>
+<p>#####5.将所做的更改从缓存区提交到HEAD</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">$git commit -m &quot;init project&quot;</span><br><span class="line">[master (root-commit) 4c7691a] init project</span><br><span class="line"> 13 files changed, 875 insertions(+)</span><br><span class="line"> create mode 100644 .gitignore</span><br><span class="line"> create mode 100644 GitUploadTest.xcodeproj/project.pbxproj</span><br><span class="line"> create mode 100644 GitUploadTest.xcodeproj/project.xcworkspace/contents.xcworkspacedata</span><br><span class="line"> create mode 100644 GitUploadTest/AppDelegate.swift</span><br><span class="line"> create mode 100644 GitUploadTest/Assets.xcassets/AppIcon.appiconset/Contents.json</span><br><span class="line"> create mode 100644 GitUploadTest/Base.lproj/LaunchScreen.storyboard</span><br><span class="line"> create mode 100644 GitUploadTest/Base.lproj/Main.storyboard</span><br><span class="line"> create mode 100644 GitUploadTest/Info.plist</span><br><span class="line"> create mode 100644 GitUploadTest/ViewController.swift</span><br><span class="line"> create mode 100644 GitUploadTestTests/GitUploadTestTests.swift</span><br><span class="line"> create mode 100644 GitUploadTestTests/Info.plist</span><br><span class="line"> create mode 100644 GitUploadTestUITests/GitUploadTestUITests.swift</span><br><span class="line"> create mode 100644 GitUploadTestUITests/Info.plist</span><br><span class="line"> </span><br><span class="line">$git status</span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working directory clean</span><br></pre></td></tr></table></figure>
+<p>此时我们已经把所做的更改从缓存区提交到了HEAD。</p>
+<p>#####6.创建Github仓库</p>
+<ul>
+<li><p>StepOne：<br>  在浏览器中输入<a href="https://github.com/wdxgtsh?tab=repositories,点击右上角的New，如图所示：" target="_blank" rel="external">https://github.com/wdxgtsh?tab=repositories,点击右上角的New，如图所示：</a><br>  <img src="https://github.com/wdxgtsh/GitUploadTest/blob/master/src/add%20new%20repositories.png?raw=true" alt="创建仓库"></p>
+</li>
+<li><p>StepTwo：输入Repositories name：GitUploadTest ;再输入Description（可选）: GitUploadTest; 选择Public repository，Private repository需要付费。如图所示：<br>  <img src="https://github.com/wdxgtsh/GitUploadTest/blob/master/src/input%20info.png?raw=true" alt="填写仓库基本信息"></p>
+</li>
+<li><p>StepThree:点击Create repository，就创建好仓库了。获取到SSH：git@github.com:wdxgtsh/GitUploadTest.git。结果如图所示：<br> <img src="https://github.com/wdxgtsh/GitUploadTest/blob/master/src/create_finish.png?raw=true" alt="未上传工程的仓库"></p>
+</li>
+</ul>
+<p>#####7.在git中创建主干线<br>在git中创建主干线有两种方式，一种是SSH方式，需要配置SSH，在这里就不再赘述，不知道怎么配置的可以自行谷歌。另外一种是https，此法比较繁琐。再次也不予介绍（需要多次输入账户和密码）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$git remote add origin git@github.com:wdxgtsh/GitUploadTest.git</span><br></pre></td></tr></table></figure>
+<p>#####8.将本地的项目push到Github上。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$git push origin master</span><br></pre></td></tr></table></figure>
+<p>此时，查看Github上的仓库。如下所示：<br><img src="https://github.com/wdxgtsh/GitUploadTest/blob/master/src/push_result.png?raw=true" alt="上传工程完毕后的仓库"></p>
+<p>#####9.将Github上的代码更新到本地</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$git pull origin master</span><br></pre></td></tr></table></figure>
+<p>####注：以上所有在命令行中输入的命令都是在XCode项目的根目录下。</p>
+<ul>
+<li>QQ：729376398</li>
+<li>QQ群：541862523</li>
+</ul>
+<p>欢迎大家一起交流，not just 技术！！！嘿嘿…….</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/03/08/2016-02-20-上传代码到Github/" data-id="cilic1wyz0003p44nowfa3och" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-2016-02-05-OC中的description方法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/08/2016-02-05-OC中的description方法/" class="article-date">
+  <time datetime="2016-03-07T16:37:36.000Z" itemprop="datePublished">2016-03-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在APP的开发过程中，经常要打印并查看对象的信息，比较low的方法是编写代码，把对象的全部的属性都输出到日志中。最常用的做法是NSLog一下。<br>在构建需要打印到日志的字符串时，object对象会收到description消息，该方法所返回的描述信息将取代“格式字符串”里的“%@”等，比如：我们要打印数组时。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NSLog(@&quot;arr = %@&quot;, arr);</span><br></pre></td></tr></table></figure>
+<p>控制台会输入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">arr = (</span><br><span class="line">	&quot;我是数组中的元素&quot;</span><br><span class="line">	&quot;我也是数组中得元素&quot;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>对应的字典之类的系统自带的类中也会输出相应地信息，然而自定义的类就不是这样的，如果我们直接打印对象（不实现类的description方法）通常会在控制台打出如下信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//person 为 Person类的一个对象</span><br><span class="line">person = &lt;Person: 0x7fsjks898939&gt;</span><br></pre></td></tr></table></figure>
+<p>与系统自带类相比，这样的输出并没什么鸟用，除非在自己的类中重写的description方法，否则打印信息时就会调用NSObject类所实现的默认方法。此方法定义在NSObject协议中，不过NSObject类实现了它。因为NSObject并不是唯一的“根类”，所以许多方法都要定义在NSObject协议里。比方说，NSProxy也是一个遵循了NSObject协议的“根类”。由于description等方法定义在NSObject协议里，因此像NSProxy这种“根类”及其子类也必须实现它们。如前所见。这些实现好的方法并没有打印出较为有用的信息，只不过是输出了类名和对象的内存地址。只有在你想判断两指针是否真的指向同一对象时，这种信息才有用处。除此之外，再也看不出其他有用的内容。</p>
+<p>通常情况下，如果我们想让自定义的类输出更有用的信息只需覆盖description方法并将描述此对象的字符串返回即可，比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line"></span><br><span class="line">@interface Person : NSObject</span><br><span class="line"></span><br><span class="line">@property (nonatomic, copy, readonly) NSString * name;</span><br><span class="line">@property (nonatomic, copy, readonly) NSString * address;</span><br><span class="line"></span><br><span class="line">- (id)initWithName:(NSString *)name address:(NSString *)address;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Person</span><br><span class="line"></span><br><span class="line">- (id)initWithName:(NSString *)name address:(NSString *)address&#123;</span><br><span class="line">	if ((self = [super init]))&#123;</span><br><span class="line">		_name = [name copy];</span><br><span class="line">		_address = [address copy];</span><br><span class="line">	&#125;</span><br><span class="line">	return self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (NSString *)description&#123;</span><br><span class="line">	return [NSString stringWithFormat:@&quot;&lt;%@ : %p, \&quot;%@ %@\&quot;&gt;&quot;, [self class], self, _name, _address];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>Person类的.h和.m文件如上所示。<br>这样的话当我们再次打印Person类的对象时，比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Person * peron = [Person alloc] initWithName:@&quot;zhangsan&quot; address:@&quot;霾都&quot;];</span><br><span class="line">NSLog(@&quot;person -&gt; %@&quot;, person);</span><br><span class="line">//Output</span><br><span class="line">//peron -&gt; &lt;Person: 0x7fsjks898939, &quot;zhangsan 霾都&quot;&gt;</span><br></pre></td></tr></table></figure>
+<p>这样就比重写description之前所输出的信息更加清楚了，也更加方便我们在开发过程中得调试。</p>
+<p>当然了，还有种更加简单地方法，也比较实用，那就是借助NSDictionary类的description方法，在自定义的description方法中，把待打印的信息放到字典里面，然后将字典对象的description方法所输出的内容包含在字符串里并返回，这样就可以实现精简的信息输出方式，比如还是上面的Person类，这次我们把description方法改写成如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (NSString *)description&#123;</span><br><span class="line">	return [NSString stringWithFormat:@“%@: %p, %@”, [self class], self, @&#123;@&quot;name&quot;:_name,</span><br><span class="line">					@&quot;address&quot;:_address&#125;];</span><br><span class="line">&#125;</span><br><span class="line">//NSLog</span><br><span class="line">//NSLog(@&quot;%@&quot;, person);</span><br><span class="line"></span><br><span class="line">//output:</span><br><span class="line">//person = &lt;Person: 0x7fsjks898939, &#123;</span><br><span class="line">				name = zhangsan;</span><br><span class="line">				address = 霾都;</span><br><span class="line">			&#125;&gt;</span><br></pre></td></tr></table></figure>
+<p>怎么样？是不是比上一个还要好点，这样做的也很方便在自定义类中增加，删除和修改属性。</p>
+<p>NSObject协议中还有一个方法在程序的调试中，当我们需要用到po命令时需要注意，那就是debugDescription，具体原理和description差不多，也就是没实现debugDescription时，当我们po一个对象时，控制台打印出的信息也就顶多一个内存地址，不方便我们调试程序，这是实现debugDescription，其中返回的数据格式和我们最终改写的description方法一样就ok了，这样我们就可以在程序的运行过程中方便的打断点，po对象，调试程序，而不用一遍又一遍的终止程序，添加NSLog语句了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/03/08/2016-02-05-OC中的description方法/" data-id="cilic1wyv0002p44nxqnhch5e" class="article-share-link">Share</a>
       
       
     </footer>
