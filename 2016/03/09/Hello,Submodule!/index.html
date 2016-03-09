@@ -6,16 +6,16 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <title>Hello,Submodule! | zhaolei_dubai</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
+  <meta name="description" content="Submodule子模块的使用通常，大型的工程总会被拆分成一些自工程，这样既有利于开发过程中开发难度的降低，也有利于使用现有的方案或者模块作为自工程。Git的高级功能Submodule就是完成这样一种自工程拆分和整合的工具。当然了，一些小公司或者一个公司就一个项目那就爱咋样咋样了，如果是外包公司或者相对来说规模比较大，App产品比较多（多个App具有相同模块）的公司，Submodule是一个不错的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hello,Submodule!">
 <meta property="og:url" content="http://yoursite.com/2016/03/09/Hello,Submodule!/index.html">
 <meta property="og:site_name" content="zhaolei_dubai">
-<meta property="og:description">
-<meta property="og:updated_time" content="2016-03-09T16:24:14.000Z">
+<meta property="og:description" content="Submodule子模块的使用通常，大型的工程总会被拆分成一些自工程，这样既有利于开发过程中开发难度的降低，也有利于使用现有的方案或者模块作为自工程。Git的高级功能Submodule就是完成这样一种自工程拆分和整合的工具。当然了，一些小公司或者一个公司就一个项目那就爱咋样咋样了，如果是外包公司或者相对来说规模比较大，App产品比较多（多个App具有相同模块）的公司，Submodule是一个不错的">
+<meta property="og:updated_time" content="2016-03-09T18:16:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hello,Submodule!">
-<meta name="twitter:description">
+<meta name="twitter:description" content="Submodule子模块的使用通常，大型的工程总会被拆分成一些自工程，这样既有利于开发过程中开发难度的降低，也有利于使用现有的方案或者模块作为自工程。Git的高级功能Submodule就是完成这样一种自工程拆分和整合的工具。当然了，一些小公司或者一个公司就一个项目那就爱咋样咋样了，如果是外包公司或者相对来说规模比较大，App产品比较多（多个App具有相同模块）的公司，Submodule是一个不错的">
   
     <link rel="alternative" href="/atom.xml" title="zhaolei_dubai" type="application/atom+xml">
   
@@ -230,7 +230,40 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h3 id="Submodule子模块的使用"><a href="#Submodule子模块的使用" class="headerlink" title="Submodule子模块的使用"></a>Submodule子模块的使用</h3><p>通常，大型的工程总会被拆分成一些自工程，这样既有利于开发过程中开发难度的降低，也有利于使用现有的方案或者模块作为自工程。Git的高级功能Submodule就是完成这样一种自工程拆分和整合的工具。当然了，一些小公司或者一个公司就一个项目那就爱咋样咋样了，如果是外包公司或者相对来说规模比较大，App产品比较多（多个App具有相同模块）的公司，Submodule是一个不错的选择。举个例子：某司是一个做社交类应用的公司，而且有多个社交App，纵观当今的社交类App，不就那几个鸟样子，基本上都包含聊天，空间，登陆注册。这个时候我们就可以适当地把聊天，登陆注册，网络请求之类的模块做成Submodule。当开发第二个甚至更多个需要集成这些模块的App时，我们只需要在相应的主工程中添加对应的submodule就可以轻轻松松把上个App的登陆注册及网路请求模块拿过来用，稍微改下、或者是不需要改就可以实现登陆注册及网络请求的功能。不仅仅能节省开发的周期，也能使我们很方便的对项目进行管理。</p>
+<p>好了，废话也不再多说，直接上干活。</p>
+<h4 id="1-创建工程"><a href="#1-创建工程" class="headerlink" title="1.创建工程."></a>1.创建工程.</h4><p>首先我们创建一个普通的iOS工程（SubmoduleApp）和两个名字分别叫做SubmoduleLogin和SubmoduleNetWork的静态库（framework）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1.SubmoduleLogin：主要实现APP的登陆注册等功能。</span><br><span class="line">2.SubmoduleNetWork：主要封装了APP的网络请求等功能。</span><br><span class="line">3.SubmoduleApp:主要负责实现APP除了SubmoduleLogin和	SubmoduleNetWork所实现的功能以外的功能。</span><br></pre></td></tr></table></figure>
+<p>在此，创建工程的过程我就不再赘述，相信做iOS开发的都会，如果实在不会可以自行谷歌。</p>
+<h4 id="2-分别上传项目到Github上"><a href="#2-分别上传项目到Github上" class="headerlink" title="2.分别上传项目到Github上."></a>2.分别上传项目到Github上.</h4><p>（在此只是为了做演示，代码就直接上传到Github上。但在实际开发中公司一般都会搭建自己的Git服务器。号外号外：不要忘记加gitignore哦！）</p>
+<p>Tips：有时，当我们把项目上传到Git上之后才想起加gitignore文件。加入后发现并未生效，原因是gitignore只能忽略那些原来没有被track的文件，如果这些文件已经纳入了版本管理中，则gitignore是无效的，解决办法就是先把本地缓存删除，改变成为未track的状态，然后再提交</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$git rm -r --cached</span><br></pre></td></tr></table></figure>
+<p>上传代码到Github我之前的博客已经提到，如果有不会的刻意点击这里<a href="http://wdxgtsh.github.io/2015/03/08/%E4%B8%8A%E4%BC%A0%E4%BB%A3%E7%A0%81%E5%88%B0Github/" target="_blank" rel="external">上传代码到Github</a>查看具体的步骤。再次也不在赘述。</p>
+<p>上传代码到Git上后，获得三个SSH。分别是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SubmoduleApp:git@github.com:wdxgtsh/SubmoduleApp.git</span><br><span class="line">SubmoduleNetWork:git@github.com:wdxgtsh/SubmoduleNetWork.git</span><br><span class="line">SubmoduleLogin:git@github.com:wdxgtsh/SubmoduleLogin.git</span><br></pre></td></tr></table></figure>
+<p>其实，当我们在Github网站上创建好仓库后，Github会我们提示怎样用命令行创建仓库并上传代码到Github。在此推荐大家在正常的项目开发中都学学使用命令行来操作，一来刻意省去很多不必要的麻烦，二来也可以装装逼么（😄😄😄）……</p>
+<h4 id="3-克隆SubmoduleApp工程到本地，并添加Submodule"><a href="#3-克隆SubmoduleApp工程到本地，并添加Submodule" class="headerlink" title="3.克隆SubmoduleApp工程到本地，并添加Submodule."></a>3.克隆SubmoduleApp工程到本地，并添加Submodule.</h4><p>在此，我们整个过程全部用命令行实现：</p>
+<ul>
+<li>首先，克隆SubmoduleApp工程到本地。（git clone git@github.com:wdxgtsh/SubmoduleApp.git）</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">	//克隆项目到本地</span><br><span class="line">	zhaolei-2:Desktop apple$ git clone git@github.com:wdxgtsh/SubmoduleApp.git</span><br><span class="line">Cloning into &apos;SubmoduleApp&apos;...</span><br><span class="line">remote: Counting objects: 29, done.</span><br><span class="line">remote: Compressing objects: 100% (22/22), done.</span><br><span class="line">remote: Total 29 (delta 2), reused 29 (delta 2), pack-reused 0</span><br><span class="line">Receiving objects: 100% (29/29), 14.44 KiB | 0 bytes/s, done.</span><br><span class="line">Resolving deltas: 100% (2/2), done.</span><br><span class="line">Checking connectivity... done.</span><br></pre></td></tr></table></figure>
+<ul>
+<li>其次,为SubmoduleApp添加Submodule。    (git submodule add git@github.com:wdxgtsh/SubmoduleLogin.git)</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">//为SubmoduleApp添加Submodule（SubmoduleLogin）</span><br><span class="line">zhaolei-2:Desktop apple$ cd SubmoduleApp/</span><br><span class="line">zhaolei-2:SubmoduleApp apple$ git submodule add git@github.com:wdxgtsh/SubmoduleLogin.git</span><br><span class="line">Cloning into &apos;SubmoduleLogin&apos;...</span><br><span class="line">remote: Counting objects: 17, done.</span><br><span class="line">remote: Compressing objects: 100% (13/13), done.</span><br><span class="line">remote: Total 17 (delta 1), reused 17 (delta 1), pack-reused 0</span><br><span class="line">Receiving objects: 100% (17/17), 9.24 KiB | 0 bytes/s, done.</span><br><span class="line">Resolving deltas: 100% (1/1), done.</span><br><span class="line">Checking connectivity... done.</span><br><span class="line">zhaolei-2:SubmoduleApp apple$ git submodule add git@github.com:wdxgtsh/SubmoduleNetWork.git</span><br><span class="line">Cloning into &apos;SubmoduleNetWork&apos;...</span><br><span class="line">remote: Counting objects: 17, done.</span><br><span class="line">remote: Compressing objects: 100% (13/13), done.</span><br><span class="line">remote: Total 17 (delta 1), reused 17 (delta 1), pack-reused 0</span><br><span class="line">Receiving objects: 100% (17/17), 9.22 KiB | 0 bytes/s, done.</span><br><span class="line">Resolving deltas: 100% (1/1), done.</span><br><span class="line">Checking connectivity... done.</span><br></pre></td></tr></table></figure>
+<p>到此为止，我们已经为SubmoduleApp添加了两个Submodule(SubmoduleLogin和SubmoduleNetWork)</p>
+<ul>
+<li>再次.提交SubmoduleApp， </li>
+</ul>
+<h4 id="4-克隆含有Submodule的git仓库"><a href="#4-克隆含有Submodule的git仓库" class="headerlink" title="4.克隆含有Submodule的git仓库"></a>4.克隆含有Submodule的git仓库</h4><ul>
+<li><p>第一种方法：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$cd workspace</span><br><span class="line">$git clone git@github.com:wdxgtsh/SubmoduleApp.git</span><br><span class="line">//不同于clone普通的仓库，含有submodule的仓库还需要将该仓库中的子模块初始化以及更新,不更新的话其中的submodule只是克隆了两个空的文件夹下来。</span><br><span class="line">$git submodule init</span><br><span class="line">$git submodule update</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果觉得上述方法太繁琐，没事，还有更简单的方法：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//该命令会自动完成一系列必须的动作</span><br><span class="line">$git clone --rescursive git@github.com:wdxgtsh/SubmoduleApp.git</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
       
     </div>
     
