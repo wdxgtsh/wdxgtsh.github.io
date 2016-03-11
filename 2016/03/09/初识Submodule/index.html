@@ -6,16 +6,16 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <title>Hello,Submodule! | zhaolei_dubai</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Submodule子模块的使用通常，大型的工程总会被拆分成一些自工程，这样既有利于开发过程中开发难度的降低，也有利于使用现有的方案或者模块作为自工程。Git的高级功能Submodule就是完成这样一种自工程拆分和整合的工具。当然了，一些小公司或者一个公司就一个项目那就爱咋样咋样了，如果是外包公司或者相对来说规模比较大，App产品比较多（多个App具有相同模块）的公司，Submodule是一个不错的">
+  <meta name="description" content="初识Submodule通常，大型的工程总会被拆分成一些自工程，这样既有利于开发过程中开发难度的降低，也有利于使用现有的方案或者模块作为自工程。Git的高级功能Submodule就是完成这样一种自工程拆分和整合的工具。当然了，一些小公司或者一个公司就一个项目那就爱咋样咋样了，如果是外包公司或者相对来说规模比较大，App产品比较多（多个App具有相同模块）的公司，Submodule是一个不错的选择。举">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hello,Submodule!">
 <meta property="og:url" content="http://yoursite.com/2016/03/09/初识Submodule/index.html">
 <meta property="og:site_name" content="zhaolei_dubai">
-<meta property="og:description" content="Submodule子模块的使用通常，大型的工程总会被拆分成一些自工程，这样既有利于开发过程中开发难度的降低，也有利于使用现有的方案或者模块作为自工程。Git的高级功能Submodule就是完成这样一种自工程拆分和整合的工具。当然了，一些小公司或者一个公司就一个项目那就爱咋样咋样了，如果是外包公司或者相对来说规模比较大，App产品比较多（多个App具有相同模块）的公司，Submodule是一个不错的">
-<meta property="og:updated_time" content="2016-03-11T15:01:46.000Z">
+<meta property="og:description" content="初识Submodule通常，大型的工程总会被拆分成一些自工程，这样既有利于开发过程中开发难度的降低，也有利于使用现有的方案或者模块作为自工程。Git的高级功能Submodule就是完成这样一种自工程拆分和整合的工具。当然了，一些小公司或者一个公司就一个项目那就爱咋样咋样了，如果是外包公司或者相对来说规模比较大，App产品比较多（多个App具有相同模块）的公司，Submodule是一个不错的选择。举">
+<meta property="og:updated_time" content="2016-03-11T15:03:32.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hello,Submodule!">
-<meta name="twitter:description" content="Submodule子模块的使用通常，大型的工程总会被拆分成一些自工程，这样既有利于开发过程中开发难度的降低，也有利于使用现有的方案或者模块作为自工程。Git的高级功能Submodule就是完成这样一种自工程拆分和整合的工具。当然了，一些小公司或者一个公司就一个项目那就爱咋样咋样了，如果是外包公司或者相对来说规模比较大，App产品比较多（多个App具有相同模块）的公司，Submodule是一个不错的">
+<meta name="twitter:description" content="初识Submodule通常，大型的工程总会被拆分成一些自工程，这样既有利于开发过程中开发难度的降低，也有利于使用现有的方案或者模块作为自工程。Git的高级功能Submodule就是完成这样一种自工程拆分和整合的工具。当然了，一些小公司或者一个公司就一个项目那就爱咋样咋样了，如果是外包公司或者相对来说规模比较大，App产品比较多（多个App具有相同模块）的公司，Submodule是一个不错的选择。举">
   
     <link rel="alternative" href="/atom.xml" title="zhaolei_dubai" type="application/atom+xml">
   
@@ -78,7 +78,7 @@
 						<li>Links</li>
 						
 						
-						<li>About</li>
+						<li>Über</li>
 						
 					</ul>
 				</div>
@@ -230,7 +230,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="Submodule子模块的使用"><a href="#Submodule子模块的使用" class="headerlink" title="Submodule子模块的使用"></a>Submodule子模块的使用</h3><p>通常，大型的工程总会被拆分成一些自工程，这样既有利于开发过程中开发难度的降低，也有利于使用现有的方案或者模块作为自工程。Git的高级功能Submodule就是完成这样一种自工程拆分和整合的工具。当然了，一些小公司或者一个公司就一个项目那就爱咋样咋样了，如果是外包公司或者相对来说规模比较大，App产品比较多（多个App具有相同模块）的公司，Submodule是一个不错的选择。举个例子：某司是一个做社交类应用的公司，而且有多个社交App，纵观当今的社交类App，不就那几个鸟样子，基本上都包含聊天，空间，登陆注册。这个时候我们就可以适当地把聊天，登陆注册，网络请求之类的模块做成Submodule。当开发第二个甚至更多个需要集成这些模块的App时，我们只需要在相应的主工程中添加对应的submodule就可以轻轻松松把上个App的登陆注册及网路请求模块拿过来用，稍微改下、或者是不需要改就可以实现登陆注册及网络请求的功能。不仅仅能节省开发的周期，也能使我们很方便的对项目进行管理。</p>
+        <h3 id="初识Submodule"><a href="#初识Submodule" class="headerlink" title="初识Submodule"></a>初识Submodule</h3><p>通常，大型的工程总会被拆分成一些自工程，这样既有利于开发过程中开发难度的降低，也有利于使用现有的方案或者模块作为自工程。Git的高级功能Submodule就是完成这样一种自工程拆分和整合的工具。当然了，一些小公司或者一个公司就一个项目那就爱咋样咋样了，如果是外包公司或者相对来说规模比较大，App产品比较多（多个App具有相同模块）的公司，Submodule是一个不错的选择。举个例子：某司是一个做社交类应用的公司，而且有多个社交App，纵观当今的社交类App，不就那几个鸟样子，基本上都包含聊天，空间，登陆注册。这个时候我们就可以适当地把聊天，登陆注册，网络请求之类的模块做成Submodule。当开发第二个甚至更多个需要集成这些模块的App时，我们只需要在相应的主工程中添加对应的submodule就可以轻轻松松把上个App的登陆注册及网路请求模块拿过来用，稍微改下、或者是不需要改就可以实现登陆注册及网络请求的功能。不仅仅能节省开发的周期，也能使我们很方便的对项目进行管理。</p>
 <p>好了，废话也不再多说，直接上干货。<br><a id="more"></a></p>
 <h4 id="1-创建工程"><a href="#1-创建工程" class="headerlink" title="1.创建工程."></a>1.创建工程.</h4><p>首先我们创建一个普通的iOS工程（SubmoduleApp）和两个名字分别叫做SubmoduleLogin和SubmoduleNetWork的静态库（framework）。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1.SubmoduleLogin：主要实现APP的登陆注册等功能。</span><br><span class="line">2.SubmoduleNetWork：主要封装了APP的网络请求等功能。</span><br><span class="line">3.SubmoduleApp:主要负责实现APP除了SubmoduleLogin和	SubmoduleNetWork所实现的功能以外的功能。</span><br></pre></td></tr></table></figure>
