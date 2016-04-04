@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>深入了解RunLoop | zhaolei_dubai</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="RunLoop
+RunLoop相关类由于Foundation只公开了NSRunLoop，其它的和RunLoop相关的类没有开源，研究RunLoop的底层实现还是需要从Core Foundation开始。
+Core Foundation中关于RunLoop的几个类：
+
+CFRunLoopRef
+CFRunLoopModeRef
+CFRunLoopSourceRef
+CFRunLoopTimerRef">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入了解RunLoop">
+<meta property="og:url" content="http://yoursite.com/2015/04/03/runloop/index.html">
+<meta property="og:site_name" content="zhaolei_dubai">
+<meta property="og:description" content="RunLoop
+RunLoop相关类由于Foundation只公开了NSRunLoop，其它的和RunLoop相关的类没有开源，研究RunLoop的底层实现还是需要从Core Foundation开始。
+Core Foundation中关于RunLoop的几个类：
+
+CFRunLoopRef
+CFRunLoopModeRef
+CFRunLoopSourceRef
+CFRunLoopTimerRef">
+<meta property="og:image" content="https://github.com/wdxgtsh/Personal/blob/master/blogImages/runloop/01-runloop.jpg?raw=true">
+<meta property="og:image" content="https://github.com/wdxgtsh/Personal/blob/master/blogImages/runloop/03-runloop.png?raw=true =1000x800">
+<meta property="og:image" content="https://github.com/wdxgtsh/Personal/blob/master/blogImages/runloop/02-runloop.png?raw=true =1000x500">
+<meta property="og:updated_time" content="2016-04-04T09:43:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入了解RunLoop">
+<meta name="twitter:description" content="RunLoop
+RunLoop相关类由于Foundation只公开了NSRunLoop，其它的和RunLoop相关的类没有开源，研究RunLoop的底层实现还是需要从Core Foundation开始。
+Core Foundation中关于RunLoop的几个类：
+
+CFRunLoopRef
+CFRunLoopModeRef
+CFRunLoopSourceRef
+CFRunLoopTimerRef">
+<meta name="twitter:image" content="https://github.com/wdxgtsh/Personal/blob/master/blogImages/runloop/01-runloop.jpg?raw=true">
+  
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="undefined" class="js-avatar" style="width: 100%;height: 100%;opacity: 1;">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zhaolei</a></h1>
+		</hgroup>
+
+		
+
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+						</div>
+					</nav>
+				</section>
+				
+				
+				
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zhaolei</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img src="undefined" class="js-avatar" style="width: 100%;height: 100%;opacity: 1;">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zhaolei</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-runloop" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/04/03/runloop/" class="article-date">
+  	<time datetime="2015-04-03T10:18:57.000Z" itemprop="datePublished">2015-04-03</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      深入了解RunLoop
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="RunLoop"><a href="#RunLoop" class="headerlink" title="RunLoop"></a>RunLoop</h3><p><img src="https://github.com/wdxgtsh/Personal/blob/master/blogImages/runloop/01-runloop.jpg?raw=true" alt="image"></p>
+<h3 id="RunLoop相关类"><a href="#RunLoop相关类" class="headerlink" title="RunLoop相关类"></a>RunLoop相关类</h3><p>由于Foundation只公开了NSRunLoop，其它的和RunLoop相关的类没有开源，研究RunLoop的底层实现还是需要从Core Foundation开始。</p>
+<p>Core Foundation中关于RunLoop的几个类：</p>
+<ul>
+<li>CFRunLoopRef</li>
+<li>CFRunLoopModeRef</li>
+<li>CFRunLoopSourceRef</li>
+<li>CFRunLoopTimerRef</li>
+<li>CFRunLoopObserverRef</li>
+</ul>
+<a id="more"></a>
+<h4 id="1-CFRunLoopModeRef"><a href="#1-CFRunLoopModeRef" class="headerlink" title="1.CFRunLoopModeRef"></a>1.CFRunLoopModeRef</h4><p>CFRunLoopModeRef代表RunLoop的运行模式。</p>
+<ul>
+<li>一个RunLoop包含多个Mode,每个Mode又包含若干个Source/Timer/Observer 。</li>
+<li>每次RunLoop启动时，只能指定其中一个Mode，这个Mode被称作CurrentMode。</li>
+<li>如果想要切换Mode，只能退出Loop。再重新指定一个Mode进入。</li>
+</ul>
+<p>这样做的主要目的是分隔开不同组的Source/Timer/Observer,让其互不影响。意思就是，当你切换RunLoop的Mode时，其对应的Source和Timer也会进行切换，切换到你当前所属Mode下的Source和Timer源。</p>
+<p>系统默认有5个Mode</p>
+<ul>
+<li>kCFRunLoopDefaultMode:系统默认Mode，通常主线程是在这个Mode下运行的。</li>
+<li>UITrackingRunLoopMode:界面跟踪Mode，用于ScrollView及其子类追踪触摸滑动，保证界面滑动时不受其他Mode影响。（意思是当UIScrollView及其子类，系统RunLoop会自动切换至UITrackingRunLoopMode，以保证UIScrollView滚动的流畅性，因为在此Mode下，RunLoop只会处理在此Mode下的Source和Timer。这也就是当滚动ScrollView时处于普通模式下的NSTimer不管用的原因。当停止滚动时系统RunLoop会自动切换至kCFRunLoopDefaultMode）</li>
+<li>UIInitializationRunLoopMode:在刚启动App时进入的第一个Mode，启动完成后就不再使用。（在打印mainRunLoop的时候回看到，后面会给出打印mainRunLoop时的输出）</li>
+<li>GSEventReceiveRunLoopMode：接受系统事件的内部Mode，通常用不到。</li>
+<li>kCFRunLoopCommonModes:这是一个占位用的Mode，不是一种真正的Mode（有其他用处）。</li>
+</ul>
+<p>实例：<br>在VC的view中添加一ScrollView或者其子类，在再VC中启动一定时器，隔段时间打印一些信息。代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">	[super viewDidLoad];</span><br><span class="line">	//创建UIScrollView并添加到VC的view上得代码省略</span><br><span class="line">	NSTimer * timer = [NSTimer timerWithTimeInterval:2.0 target:self 		selector:@selector(run) userInfo:nil repeats:YES];</span><br><span class="line">    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];</span><br><span class="line">&#125;</span><br><span class="line">- (void)run&#123;</span><br><span class="line">	NSLog(@&quot;------------------&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当把timer添加到当前RunLoop的NSDefaultRunLoopMode模式下，在未滚动ScrollView时，timer正常运行，控制台每隔2s执行run方法，打印信息。滚动ScrollView时，控制台不会打印出任何信息，也就代表着timer被终断，此时当前RunLoop处于UITrackingRunLoopMode下，只执行UITrackingRunLoopMode所对应的各种输入源。</p>
+<p>当把timer加入到UITrackingRunLoopMode中时，只有当我们滚动ScrollView时，timer才会正常执行，控制台中才会每隔2s打印出信息。因为当我们滚动ScrollView时，当前的RunLoop处于UITrackingRunLoopMode下，才会去从UITrackingRunLoopMode中取出其所包含的各类数据源依次执行。</p>
+<p>如果我们想要在ScrollView滚动或者非滚动状态下都要timer正常执行，则需要把timer添加到NSRunLoop的NSRunLoopCommonModes模式中，此模式可以理解为NSDefaultRunLoopMode和UITrackingRunLoopMode的一个合集，此时，再运行程序，发现无论在ScrollView滚动或者非滚动状态下timer都会正常执行。</p>
+<h6 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h6><pre><code>如果当ScrollView或者其子类所含图片较多，或者其他影响ScrollView滑动丝滑的情况下，可以把这些操作放在NSDefaultRunLoopMode中，当ScrollView滚动时（即当前RunLoop处于UITrackingRunLoopMode状态下）则不会执行此类操作，只有当Scrollview处于非滚动状态下才会执行响应的操作，从而保证了ScrollView滑动时的丝滑。
+</code></pre><h4 id="2-CFRunLoopSourceRef"><a href="#2-CFRunLoopSourceRef" class="headerlink" title="2.CFRunLoopSourceRef"></a>2.CFRunLoopSourceRef</h4><p>CFRunLoopSourceRef是事件源（输入源）<br>一些触摸事件，点击事件都是由Source触发的。有一些事件过来了就代表一些Source过来了，RunLoop循环处理这些Source就意味着处理这些触摸事件，点击事件。</p>
+<p>按照官方文档，Source可以分为以下几类(理论上来分)：</p>
+<ul>
+<li>Port Sources：基于端口的数据源，和其他线程进行交互的数据源</li>
+<li>Custom Sources：自定义的输入源</li>
+<li>perform selector Sources：performSelector系列</li>
+</ul>
+<p>按照函数调用栈(后面会有解释什么是函数调用栈)，Source的分类（实践上分类）：</p>
+<ul>
+<li>Source1：基于Port的，通过内核和其他线程通信，接收，分发系统事件。</li>
+<li>Source0：非基于Port， !Source1<br>Source1是用来接受事件的，虽然调用栈里面没有Source1，但是Source1不可或缺，比如点击事件，点击屏幕，系统生成一个Event，先传到Source1 ，再由Source1分发给Source0,由Source0进行处理。</li>
+</ul>
+<h4 id="CFRunLoopObserverRef"><a href="#CFRunLoopObserverRef" class="headerlink" title="CFRunLoopObserverRef"></a>CFRunLoopObserverRef</h4><p>CFRunLoopObserverRef是观察者，能够监听RunLoop的状态改变。<br>可以监听的时间点有以下几个：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/* Run Loop Observer Activities */</span><br><span class="line">typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) &#123;</span><br><span class="line">    kCFRunLoopEntry = (1UL &lt;&lt; 0), // 即将进入 Loop</span><br><span class="line">    kCFRunLoopBeforeTimers = (1UL &lt;&lt; 1), // 即将处理 Timer</span><br><span class="line">    kCFRunLoopBeforeSources = (1UL &lt;&lt; 2), // 即将处理 Source</span><br><span class="line">    kCFRunLoopBeforeWaiting = (1UL &lt;&lt; 5), // 即将进入休眠</span><br><span class="line">    kCFRunLoopAfterWaiting = (1UL &lt;&lt; 6),	// 刚从休眠中唤醒</span><br><span class="line">    kCFRunLoopExit = (1UL &lt;&lt; 7),			// 即将退出Loop</span><br><span class="line">    kCFRunLoopAllActivities = 0x0FFFFFFFU // 包括以上所有</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>多说无益，实战出真理：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">//省略添加Button的部分代码 其中在Button的点击事件中的NSLog出打一断点</span><br><span class="line">//VC中代码如下：</span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    CFRunLoopObserverRef observer = CFRunLoopObserverCreateWithHandler(CFAllocatorGetDefault(), kCFRunLoopAllActivities, YES, 0, ^(CFRunLoopObserverRef observer, CFRunLoopActivity activity) &#123;</span><br><span class="line">        switch (activity) &#123;</span><br><span class="line">            case kCFRunLoopEntry:</span><br><span class="line">                NSLog(@&quot;--------&gt;即将进入RunLoop&quot;);</span><br><span class="line">               // break;</span><br><span class="line">             </span><br><span class="line">            case kCFRunLoopBeforeTimers:</span><br><span class="line">                NSLog(@&quot;--------&gt;即将处理RunLoop&quot;);</span><br><span class="line">                //break;</span><br><span class="line"></span><br><span class="line">            case kCFRunLoopBeforeSources:</span><br><span class="line">                NSLog(@&quot;--------&gt;即将处理Source&quot;);</span><br><span class="line">                //break;</span><br><span class="line"></span><br><span class="line">            case kCFRunLoopBeforeWaiting:</span><br><span class="line">                NSLog(@&quot;--------&gt;即将进入休眠&quot;);</span><br><span class="line">                //break;</span><br><span class="line"></span><br><span class="line">            case kCFRunLoopAfterWaiting:</span><br><span class="line">                NSLog(@&quot;--------&gt;刚从休眠中唤醒&quot;);</span><br><span class="line">                //break;</span><br><span class="line"></span><br><span class="line">            case kCFRunLoopExit:</span><br><span class="line">                NSLog(@&quot;--------&gt;即将退出Loop&quot;);</span><br><span class="line">                //break;</span><br><span class="line">                </span><br><span class="line">            case kCFRunLoopAllActivities:</span><br><span class="line">                NSLog(@&quot;--------&gt;包括以上所有状态&quot;);</span><br><span class="line">                //break;</span><br><span class="line">                </span><br><span class="line">//            default:</span><br><span class="line">                //break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    CFRunLoopAddObserver(CFRunLoopGetCurrent(), observer, kCFRunLoopDefaultMode);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//添加Button的代码省略</span><br><span class="line">- (void)btnClicked:(id)sender &#123;</span><br><span class="line">    NSLog(@&quot;btn has Clicked -------&gt; &quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行上述程序，控制台输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">//从APP启动到显示界面</span><br><span class="line">2015-04-03 20:21:46.253 RunLoop[47580:1341684] --------&gt;即将进入RunLoop</span><br><span class="line">2015-04-03 20:21:46.254 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:21:46.254 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:21:46.256 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:21:46.256 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:21:46.257 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:21:46.257 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:21:46.257 RunLoop[47580:1341684] --------&gt;即将进入休眠</span><br><span class="line">2015-04-03 20:21:46.258 RunLoop[47580:1341684] --------&gt;刚从休眠中唤醒</span><br><span class="line">2015-04-03 20:21:46.258 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:21:46.258 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:21:46.258 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:21:46.259 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:21:46.259 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:21:46.259 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:21:46.260 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:21:46.260 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:21:46.260 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:21:46.260 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:21:46.261 RunLoop[47580:1341684] --------&gt;即将进入休眠</span><br><span class="line">2015-04-03 20:21:46.623 RunLoop[47580:1341684] --------&gt;刚从休眠中唤醒</span><br><span class="line">2015-04-03 20:21:46.625 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:21:46.626 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:21:46.627 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:21:46.627 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:21:46.630 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:21:46.630 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:21:46.630 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:21:46.631 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:21:46.631 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:21:46.631 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:21:46.631 RunLoop[47580:1341684] --------&gt;即将进入休眠</span><br><span class="line">2015-04-03 20:21:47.535 RunLoop[47580:1341684] --------&gt;刚从休眠中唤醒</span><br><span class="line">2015-04-03 20:21:47.535 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:21:47.536 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:21:47.536 RunLoop[47580:1341684] --------&gt;即将进入休眠</span><br><span class="line">2015-04-03 20:22:00.002 RunLoop[47580:1341684] --------&gt;刚从休眠中唤醒</span><br><span class="line">2015-04-03 20:22:00.009 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:22:00.010 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:22:00.010 RunLoop[47580:1341684] --------&gt;即将进入休眠</span><br><span class="line">//点击Button 至程序执行到断点处 输出如下</span><br><span class="line">2015-04-03 20:23:57.859 RunLoop[47580:1341684] --------&gt;刚从休眠中唤醒</span><br><span class="line">2015-04-03 20:23:57.859 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:23:57.859 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:23:57.863 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:23:57.863 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:23:57.863 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:23:57.863 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:23:57.864 RunLoop[47580:1341684] --------&gt;即将进入休眠</span><br><span class="line">2015-04-03 20:23:57.888 RunLoop[47580:1341684] --------&gt;刚从休眠中唤醒</span><br><span class="line">2015-04-03 20:23:57.889 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:23:57.890 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">//放过断点   让程序继续执行  输出如下：</span><br><span class="line">2015-04-03 20:24:40.672 RunLoop[47580:1341684] btn has Clicked -------&gt; </span><br><span class="line">2015-04-03 20:24:40.674 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:24:40.674 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:24:40.674 RunLoop[47580:1341684] --------&gt;即将进入休眠</span><br><span class="line">2015-04-03 20:24:40.674 RunLoop[47580:1341684] --------&gt;刚从休眠中唤醒</span><br><span class="line">2015-04-03 20:24:40.674 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:24:40.674 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:24:40.675 RunLoop[47580:1341684] --------&gt;即将进入休眠</span><br><span class="line">2015-04-03 20:24:40.675 RunLoop[47580:1341684] --------&gt;刚从休眠中唤醒</span><br><span class="line">2015-04-03 20:24:40.676 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:24:40.676 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:24:40.676 RunLoop[47580:1341684] --------&gt;即将进入休眠</span><br><span class="line">2015-04-03 20:24:41.154 RunLoop[47580:1341684] --------&gt;刚从休眠中唤醒</span><br><span class="line">2015-04-03 20:24:41.155 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:24:41.155 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:24:41.156 RunLoop[47580:1341684] --------&gt;即将进入休眠</span><br><span class="line">2015-04-03 20:24:41.156 RunLoop[47580:1341684] --------&gt;刚从休眠中唤醒</span><br><span class="line">2015-04-03 20:24:41.157 RunLoop[47580:1341684] --------&gt;即将处理RunLoop</span><br><span class="line">2015-04-03 20:24:41.158 RunLoop[47580:1341684] --------&gt;即将处理Source</span><br><span class="line">2015-04-03 20:24:41.159 RunLoop[47580:1341684] --------&gt;即将进入休眠</span><br></pre></td></tr></table></figure>
+<p>RunLoop的循环过程清晰的展现了出来……</p>
+<p>RunLoop处理逻辑，如下图：<br><img src="https://github.com/wdxgtsh/Personal/blob/master/blogImages/runloop/03-runloop.png?raw=true =1000x800" alt="image"></p>
+<h4 id="2-CFRunLoopTimerRef"><a href="#2-CFRunLoopTimerRef" class="headerlink" title="2.CFRunLoopTimerRef"></a>2.CFRunLoopTimerRef</h4><p>CFRunLoopTimerRef是基于时间的触发器，基本上可以理解NSTimer</p>
+<p>从mainRunLoop的打印信息中可以看到如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">common modes = &lt;CFBasicHash 0x7f8e3bd04920 [0x109aeba40]&gt;&#123;type = mutable set, count = 2,</span><br><span class="line">     entries =&gt;</span><br><span class="line">     0 : &lt;CFString 0x10aa23210 [0x109aeba40]&gt;&#123;contents = &quot;UITrackingRunLoopMode&quot;&#125;</span><br><span class="line">     2 : &lt;CFString 0x109b0c5e0 [0x109aeba40]&gt;&#123;contents = &quot;kCFRunLoopDefaultMode&quot;&#125;</span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="函数调用栈"><a href="#函数调用栈" class="headerlink" title="函数调用栈"></a>函数调用栈</h3><p><img src="https://github.com/wdxgtsh/Personal/blob/master/blogImages/runloop/02-runloop.png?raw=true =1000x500" alt="image"><br>如图：上图中小方框内为精简版的函数调用栈，大方框内为完整版的函数调用栈，从大方框中的函数调用栈可以看到一个应用程序从启动到执行到断点处的所有执行过程，一步一步的，很清晰。其中我们可以找到__CFRunLoopDoSources0字样，</p>
+<p>打印[NSRunLoop mainRunLoop]，信息如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br></pre></td><td class="code"><pre><span class="line">&lt;CFRunLoop 0x7f8e3bd04850 [0x109aeba40]&gt;&#123;wakeup port = 0x1403, stopped = false, ignoreWakeUps = false, </span><br><span class="line">current mode = UIInitializationRunLoopMode,</span><br><span class="line">common modes = &lt;CFBasicHash 0x7f8e3bd04920 [0x109aeba40]&gt;&#123;type = mutable set, count = 2,</span><br><span class="line">entries =&gt;</span><br><span class="line">	0 : &lt;CFString 0x10aa23210 [0x109aeba40]&gt;&#123;contents = &quot;UITrackingRunLoopMode&quot;&#125;</span><br><span class="line">	2 : &lt;CFString 0x109b0c5e0 [0x109aeba40]&gt;&#123;contents = &quot;kCFRunLoopDefaultMode&quot;&#125;</span><br><span class="line">&#125;</span><br><span class="line">,</span><br><span class="line">common mode items = &lt;CFBasicHash 0x7f8e3bd04b30 [0x109aeba40]&gt;&#123;type = mutable set, count = 16,</span><br><span class="line">entries =&gt;</span><br><span class="line">	0 : &lt;CFRunLoopSource 0x7f8e3bc056d0 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = -1, context = &lt;CFRunLoopSource context&gt;&#123;version = 0, info = 0x0, callout = PurpleEventSignalCallback (0x10d17e779)&#125;&#125;</span><br><span class="line">	1 : &lt;CFRunLoopSource 0x7f8e3bc05610 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = 0, context = &lt;CFMachPort 0x7f8e3be00c20 [0x109aeba40]&gt;&#123;valid = Yes, port = 1e03, source = 0x7f8e3bc05610, callout = __IOHIDEventSystemClientAvailabilityCallback (0x10bdac444), context = &lt;CFMachPort context 0x7f8e3bd098f0&gt;&#125;&#125;</span><br><span class="line">	2 : &lt;CFRunLoopObserver 0x7f8e3be08850 [0x109aeba40]&gt;&#123;valid = Yes, activities = 0xa0, repeats = Yes, order = 2001000, callout = _afterCACommitHandler (0x109ca70ed), context = &lt;CFRunLoopObserver context 0x7f8e3bc05cf0&gt;&#125;</span><br><span class="line">	3 : &lt;CFRunLoopSource 0x7f8e3bc2f300 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = 0, context = &lt;CFRunLoopSource MIG Server&gt; &#123;port = 18191, subsystem = 0x10aa079f0, context = 0x7f8e3bc19ce0&#125;&#125;</span><br><span class="line">	9 : &lt;CFRunLoopSource 0x7f8e3bf00d50 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = 0, context = &lt;CFMachPort 0x7f8e3bd04600 [0x109aeba40]&gt;&#123;valid = Yes, port = 1007, source = 0x7f8e3bf00d50, callout = _ZL20notify_port_callbackP12__CFMachPortPvlS1_ (0x10ddc1a11), context = &lt;CFMachPort context 0x0&gt;&#125;&#125;</span><br><span class="line">	10 : &lt;CFRunLoopSource 0x7f8e3be02c30 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = 0, context = &lt;CFRunLoopSource MIG Server&gt; &#123;port = 11579, subsystem = 0x10a9f48b0, context = 0x0&#125;&#125;</span><br><span class="line">	11 : &lt;CFRunLoopObserver 0x7f8e3be0e470 [0x109aeba40]&gt;&#123;valid = Yes, activities = 0x20, repeats = Yes, order = 0, callout = _UIGestureRecognizerUpdateObserver (0x10a16241f), context = &lt;CFRunLoopObserver context 0x0&gt;&#125;</span><br><span class="line">	12 : &lt;CFRunLoopObserver 0x7f8e3bc0e520 [0x109aeba40]&gt;&#123;valid = Yes, activities = 0xa0, repeats = Yes, order = 2000000, callout = _ZN2CA11Transaction17observer_callbackEP19__CFRunLoopObservermPv (0x10ddb179c), context = &lt;CFRunLoopObserver context 0x0&gt;&#125;</span><br><span class="line">	13 : &lt;CFRunLoopSource 0x7f8e3bc058c0 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = -1, context = &lt;CFRunLoopSource context&gt;&#123;version = 1, info = 0x2203, callout = PurpleEventCallback (0x10d180cb0)&#125;&#125;</span><br><span class="line">	14 : &lt;CFRunLoopObserver 0x7f8e3be03640 [0x109aeba40]&gt;&#123;valid = Yes, activities = 0xa0, repeats = Yes, order = 1999000, callout = _beforeCACommitHandler (0x109ca70a8), context = &lt;CFRunLoopObserver context 0x7f8e3bc05cf0&gt;&#125;</span><br><span class="line">	15 : &lt;CFRunLoopSource 0x7f8e3be00f60 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = 1, context = &lt;CFMachPort 0x7f8e3bd09d70 [0x109aeba40]&gt;&#123;valid = Yes, port = 1b03, source = 0x7f8e3be00f60, callout = __IOMIGMachPortPortCallback (0x10bdb4a01), context = &lt;CFMachPort context 0x7f8e3bd09d00&gt;&#125;&#125;</span><br><span class="line">	16 : &lt;CFRunLoopSource 0x7f8e3be07e10 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = -1, context = &lt;CFRunLoopSource context&gt;&#123;version = 0, info = 0x7f8e3bc05cf0, callout = _UIApplicationHandleEventQueue (0x109c73b4f)&#125;&#125;</span><br><span class="line">	17 : &lt;CFRunLoopSource 0x7f8e3be06460 [0x109aeba40]&gt;&#123;signalled = Yes, valid = Yes, order = 0, context = &lt;CFRunLoopSource context&gt;&#123;version = 0, info = 0x7f8e3bf05930, callout = FBSSerialQueueRunLoopSourceHandler (0x10c714f5b)&#125;&#125;</span><br><span class="line">	20 : &lt;CFRunLoopObserver 0x7f8e3be0a410 [0x109aeba40]&gt;&#123;valid = Yes, activities = 0xa0, repeats = Yes, order = 2147483647, callout = _wrapRunLoopWithAutoreleasePoolHandler (0x109c734c2), context = &lt;CFArray 0x7f8e3be03710 [0x109aeba40]&gt;&#123;type = mutable-small, count = 0, values = ()&#125;&#125;</span><br><span class="line">	21 : &lt;CFRunLoopSource 0x7f8e3bc04730 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = 0, context = &lt;CFMachPort 0x7f8e3be00b10 [0x109aeba40]&gt;&#123;valid = Yes, port = 1d03, source = 0x7f8e3bc04730, callout = __IOHIDEventSystemClientQueueCallback (0x10bdac293), context = &lt;CFMachPort context 0x7f8e3bd098f0&gt;&#125;&#125;</span><br><span class="line">	22 : &lt;CFRunLoopObserver 0x7f8e3be0a370 [0x109aeba40]&gt;&#123;valid = Yes, activities = 0x1, repeats = Yes, order = -2147483647, callout = _wrapRunLoopWithAutoreleasePoolHandler (0x109c734c2), context = &lt;CFArray 0x7f8e3be03710 [0x109aeba40]&gt;&#123;type = mutable-small, count = 0, values = ()&#125;&#125;</span><br><span class="line">&#125;</span><br><span class="line">,</span><br><span class="line">modes = &lt;CFBasicHash 0x7f8e3bd049a0 [0x109aeba40]&gt;&#123;type = mutable set, count = 5,</span><br><span class="line">entries =&gt;</span><br><span class="line">	2 : &lt;CFRunLoopMode 0x7f8e3bd05830 [0x109aeba40]&gt;&#123;name = UITrackingRunLoopMode, port set = 0x1707, timer port = 0x1803, </span><br><span class="line">	sources0 = &lt;CFBasicHash 0x7f8e3bd057f0 [0x109aeba40]&gt;&#123;type = mutable set, count = 3,</span><br><span class="line">entries =&gt;</span><br><span class="line">	0 : &lt;CFRunLoopSource 0x7f8e3bc056d0 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = -1, context = &lt;CFRunLoopSource context&gt;&#123;version = 0, info = 0x0, callout = PurpleEventSignalCallback (0x10d17e779)&#125;&#125;</span><br><span class="line">	1 : &lt;CFRunLoopSource 0x7f8e3be06460 [0x109aeba40]&gt;&#123;signalled = Yes, valid = Yes, order = 0, context = &lt;CFRunLoopSource context&gt;&#123;version = 0, info = 0x7f8e3bf05930, callout = FBSSerialQueueRunLoopSourceHandler (0x10c714f5b)&#125;&#125;</span><br><span class="line">	2 : &lt;CFRunLoopSource 0x7f8e3be07e10 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = -1, context = &lt;CFRunLoopSource context&gt;&#123;version = 0, info = 0x7f8e3bc05cf0, callout = _UIApplicationHandleEventQueue (0x109c73b4f)&#125;&#125;</span><br><span class="line">&#125;</span><br><span class="line">,</span><br><span class="line">	sources1 = &lt;CFBasicHash 0x7f8e3bd058e0 [0x109aeba40]&gt;&#123;type = mutable set, count = 7,</span><br><span class="line">entries =&gt;</span><br><span class="line">	0 : &lt;CFRunLoopSource 0x7f8e3bc05610 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = 0, context = &lt;CFMachPort 0x7f8e3be00c20 [0x109aeba40]&gt;&#123;valid = Yes, port = 1e03, source = 0x7f8e3bc05610, callout = __IOHIDEventSystemClientAvailabilityCallback (0x10bdac444), context = &lt;CFMachPort context 0x7f8e3bd098f0&gt;&#125;&#125;</span><br><span class="line">	4 : &lt;CFRunLoopSource 0x7f8e3bc04730 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = 0, context = &lt;CFMachPort 0x7f8e3be00b10 [0x109aeba40]&gt;&#123;valid = Yes, port = 1d03, source = 0x7f8e3bc04730, callout = __IOHIDEventSystemClientQueueCallback (0x10bdac293), context = &lt;CFMachPort context 0x7f8e3bd098f0&gt;&#125;&#125;</span><br><span class="line">	5 : &lt;CFRunLoopSource 0x7f8e3bc2f300 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = 0, context = &lt;CFRunLoopSource MIG Server&gt; &#123;port = 18191, subsystem = 0x10aa079f0, context = 0x7f8e3bc19ce0&#125;&#125;</span><br><span class="line">	8 : &lt;CFRunLoopSource 0x7f8e3bf00d50 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = 0, context = &lt;CFMachPort 0x7f8e3bd04600 [0x109aeba40]&gt;&#123;valid = Yes, port = 1007, source = 0x7f8e3bf00d50, callout = _ZL20notify_port_callbackP12__CFMachPortPvlS1_ (0x10ddc1a11), context = &lt;CFMachPort context 0x0&gt;&#125;&#125;</span><br><span class="line">	9 : &lt;CFRunLoopSource 0x7f8e3be02c30 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = 0, context = &lt;CFRunLoopSource MIG Server&gt; &#123;port = 11579, subsystem = 0x10a9f48b0, context = 0x0&#125;&#125;</span><br><span class="line">	10 : &lt;CFRunLoopSource 0x7f8e3bc058c0 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = -1, context = &lt;CFRunLoopSource context&gt;&#123;version = 1, info = 0x2203, callout = PurpleEventCallback (0x10d180cb0)&#125;&#125;</span><br><span class="line">	12 : &lt;CFRunLoopSource 0x7f8e3be00f60 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = 1, context = &lt;CFMachPort 0x7f8e3bd09d70 [0x109aeba40]&gt;&#123;valid = Yes, port = 1b03, source = 0x7f8e3be00f60, callout = __IOMIGMachPortPortCallback (0x10bdb4a01), context = &lt;CFMachPort context 0x7f8e3bd09d00&gt;&#125;&#125;</span><br><span class="line">&#125;</span><br><span class="line">,</span><br><span class="line">	observers = &lt;CFArray 0x7f8e3be036e0 [0x109aeba40]&gt;&#123;type = mutable-small, count = 6, values = (</span><br><span class="line">	0 : &lt;CFRunLoopObserver 0x7f8e3be0a370 [0x109aeba40]&gt;&#123;valid = Yes, activities = 0x1, repeats = Yes, order = -2147483647, callout = _wrapRunLoopWithAutoreleasePoolHandler (0x109c734c2), context = &lt;CFArray 0x7f8e3be03710 [0x109aeba40]&gt;&#123;type = mutable-small, count = 0, values = ()&#125;&#125;</span><br><span class="line">	1 : &lt;CFRunLoopObserver 0x7f8e3be0e470 [0x109aeba40]&gt;&#123;valid = Yes, activities = 0x20, repeats = Yes, order = 0, callout = _UIGestureRecognizerUpdateObserver (0x10a16241f), context = &lt;CFRunLoopObserver context 0x0&gt;&#125;</span><br><span class="line">	2 : &lt;CFRunLoopObserver 0x7f8e3be03640 [0x109aeba40]&gt;&#123;valid = Yes, activities = 0xa0, repeats = Yes, order = 1999000, callout = _beforeCACommitHandler (0x109ca70a8), context = &lt;CFRunLoopObserver context 0x7f8e3bc05cf0&gt;&#125;</span><br><span class="line">	3 : &lt;CFRunLoopObserver 0x7f8e3bc0e520 [0x109aeba40]&gt;&#123;valid = Yes, activities = 0xa0, repeats = Yes, order = 2000000, callout = _ZN2CA11Transaction17observer_callbackEP19__CFRunLoopObservermPv (0x10ddb179c), context = &lt;CFRunLoopObserver context 0x0&gt;&#125;</span><br><span class="line">	4 : &lt;CFRunLoopObserver 0x7f8e3be08850 [0x109aeba40]&gt;&#123;valid = Yes, activities = 0xa0, repeats = Yes, order = 2001000, callout = _afterCACommitHandler (0x109ca70ed), context = &lt;CFRunLoopObserver context 0x7f8e3bc05cf0&gt;&#125;</span><br><span class="line">	5 : &lt;CFRunLoopObserver 0x7f8e3be0a410 [0x109aeba40]&gt;&#123;valid = Yes, activities = 0xa0, repeats = Yes, order = 2147483647, callout = _wrapRunLoopWithAutoreleasePoolHandler (0x109c734c2), context = &lt;CFArray 0x7f8e3be03710 [0x109aeba40]&gt;&#123;type = mutable-small, count = 0, values = ()&#125;&#125;</span><br><span class="line">)&#125;,</span><br><span class="line">	timers = (null),</span><br><span class="line">	currently 481365389 (123872341872446) / soft deadline in: 1.84466202e+10 sec (@ -1) / hard deadline in: 1.84466202e+10 sec (@ -1)</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">	3 : &lt;CFRunLoopMode 0x7f8e3bc05790 [0x109aeba40]&gt;&#123;name = GSEventReceiveRunLoopMode, port set = 0x2003, timer port = 0x2103, </span><br><span class="line">	sources0 = &lt;CFBasicHash 0x7f8e3bc04850 [0x109aeba40]&gt;&#123;type = mutable set, count = 1,</span><br><span class="line">entries =&gt;</span><br><span class="line">	0 : &lt;CFRunLoopSource 0x7f8e3bc056d0 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = -1, context = &lt;CFRunLoopSource context&gt;&#123;version = 0, info = 0x0, callout = PurpleEventSignalCallback (0x10d17e779)&#125;&#125;</span><br><span class="line">&#125;</span><br><span class="line">,</span><br><span class="line">	sources1 = &lt;CFBasicHash 0x7f8e3bc045c0 [0x109aeba40]&gt;&#123;type = mutable set, count = 1,</span><br><span class="line">entries =&gt;</span><br><span class="line">	1 : &lt;CFRunLoopSource 0x7f8e3bc05a40 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = -1, context = &lt;CFRunLoopSource context&gt;&#123;version = 1, info = 0x2203, callout = PurpleEventCallback (0x10d180cb0)&#125;&#125;</span><br><span class="line">&#125;</span><br><span class="line">,</span><br><span class="line">	observers = (null),</span><br><span class="line">	timers = (null),</span><br><span class="line">	currently 481365389 (123872342647006) / soft deadline in: 1.84466202e+10 sec (@ -1) / hard deadline in: 1.84466202e+10 sec (@ -1)</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">	4 : &lt;CFRunLoopMode 0x7f8e3bd049e0 [0x109aeba40]&gt;&#123;name = kCFRunLoopDefaultMode, port set = 0x1503, timer port = 0x1603, </span><br><span class="line">	sources0 = &lt;CFBasicHash 0x7f8e3bd04b90 [0x109aeba40]&gt;&#123;type = mutable set, count = 3,</span><br><span class="line">entries =&gt;</span><br><span class="line">	0 : &lt;CFRunLoopSource 0x7f8e3bc056d0 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = -1, context = &lt;CFRunLoopSource context&gt;&#123;version = 0, info = 0x0, callout = PurpleEventSignalCallback (0x10d17e779)&#125;&#125;</span><br><span class="line">	1 : &lt;CFRunLoopSource 0x7f8e3be06460 [0x109aeba40]&gt;&#123;signalled = Yes, valid = Yes, order = 0, context = &lt;CFRunLoopSource context&gt;&#123;version = 0, info = 0x7f8e3bf05930, callout = FBSSerialQueueRunLoopSourceHandler (0x10c714f5b)&#125;&#125;</span><br><span class="line">	2 : &lt;CFRunLoopSource 0x7f8e3be07e10 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = -1, context = &lt;CFRunLoopSource context&gt;&#123;version = 0, info = 0x7f8e3bc05cf0, callout = _UIApplicationHandleEventQueue (0x109c73b4f)&#125;&#125;</span><br><span class="line">&#125;</span><br><span class="line">,</span><br><span class="line">	sources1 = &lt;CFBasicHash 0x7f8e3bd04bd0 [0x109aeba40]&gt;&#123;type = mutable set, count = 7,</span><br><span class="line">entries =&gt;</span><br><span class="line">	0 : &lt;CFRunLoopSource 0x7f8e3bc05610 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = 0, context = &lt;CFMachPort 0x7f8e3be00c20 [0x109aeba40]&gt;&#123;valid = Yes, port = 1e03, source = 0x7f8e3bc05610, callout = __IOHIDEventSystemClientAvailabilityCallback (0x10bdac444), context = &lt;CFMachPort context 0x7f8e3bd098f0&gt;&#125;&#125;</span><br><span class="line">	4 : &lt;CFRunLoopSource 0x7f8e3bc04730 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = 0, context = &lt;CFMachPort 0x7f8e3be00b10 [0x109aeba40]&gt;&#123;valid = Yes, port = 1d03, source = 0x7f8e3bc04730, callout = __IOHIDEventSystemClientQueueCallback (0x10bdac293), context = &lt;CFMachPort context 0x7f8e3bd098f0&gt;&#125;&#125;</span><br><span class="line">	5 : &lt;CFRunLoopSource 0x7f8e3bc2f300 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = 0, context = &lt;CFRunLoopSource MIG Server&gt; &#123;port = 18191, subsystem = 0x10aa079f0, context = 0x7f8e3bc19ce0&#125;&#125;</span><br><span class="line">	8 : &lt;CFRunLoopSource 0x7f8e3bf00d50 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = 0, context = &lt;CFMachPort 0x7f8e3bd04600 [0x109aeba40]&gt;&#123;valid = Yes, port = 1007, source = 0x7f8e3bf00d50, callout = _ZL20notify_port_callbackP12__CFMachPortPvlS1_ (0x10ddc1a11), context = &lt;CFMachPort context 0x0&gt;&#125;&#125;</span><br><span class="line">	9 : &lt;CFRunLoopSource 0x7f8e3be02c30 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = 0, context = &lt;CFRunLoopSource MIG Server&gt; &#123;port = 11579, subsystem = 0x10a9f48b0, context = 0x0&#125;&#125;</span><br><span class="line">	10 : &lt;CFRunLoopSource 0x7f8e3bc058c0 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = -1, context = &lt;CFRunLoopSource context&gt;&#123;version = 1, info = 0x2203, callout = PurpleEventCallback (0x10d180cb0)&#125;&#125;</span><br><span class="line">	12 : &lt;CFRunLoopSource 0x7f8e3be00f60 [0x109aeba40]&gt;&#123;signalled = No, valid = Yes, order = 1, context = &lt;CFMachPort 0x7f8e3bd09d70 [0x109aeba40]&gt;&#123;valid = Yes, port = 1b03, source = 0x7f8e3be00f60, callout = __IOMIGMachPortPortCallback (0x10bdb4a01), context = &lt;CFMachPort context 0x7f8e3bd09d00&gt;&#125;&#125;</span><br><span class="line">&#125;</span><br><span class="line">,</span><br><span class="line">	observers = &lt;CFArray 0x7f8e3be03740 [0x109aeba40]&gt;&#123;type = mutable-small, count = 6, values = (</span><br><span class="line">	0 : &lt;CFRunLoopObserver 0x7f8e3be0a370 [0x109aeba40]&gt;&#123;valid = Yes, activities = 0x1, repeats = Yes, order = -2147483647, callout = _wrapRunLoopWithAutoreleasePoolHandler (0x109c734c2), context = &lt;CFArray 0x7f8e3be03710 [0x109aeba40]&gt;&#123;type = mutable-small, count = 0, values = ()&#125;&#125;</span><br><span class="line">	1 : &lt;CFRunLoopObserver 0x7f8e3be0e470 [0x109aeba40]&gt;&#123;valid = Yes, activities = 0x20, repeats = Yes, order = 0, callout = _UIGestureRecognizerUpdateObserver (0x10a16241f), context = &lt;CFRunLoopObserver context 0x0&gt;&#125;</span><br><span class="line">	2 : &lt;CFRunLoopObserver 0x7f8e3be03640 [0x109aeba40]&gt;&#123;valid = Yes, activities = 0xa0, repeats = Yes, order = 1999000, callout = _beforeCACommitHandler (0x109ca70a8), context = &lt;CFRunLoopObserver context 0x7f8e3bc05cf0&gt;&#125;</span><br><span class="line">	3 : &lt;CFRunLoopObserver 0x7f8e3bc0e520 [0x109aeba40]&gt;&#123;valid = Yes, activities = 0xa0, repeats = Yes, order = 2000000, callout = _ZN2CA11Transaction17observer_callbackEP19__CFRunLoopObservermPv (0x10ddb179c), context = &lt;CFRunLoopObserver context 0x0&gt;&#125;</span><br><span class="line">	4 : &lt;CFRunLoopObserver 0x7f8e3be08850 [0x109aeba40]&gt;&#123;valid = Yes, activities = 0xa0, repeats = Yes, order = 2001000, callout = _afterCACommitHandler (0x109ca70ed), context = &lt;CFRunLoopObserver context 0x7f8e3bc05cf0&gt;&#125;</span><br><span class="line">	5 : &lt;CFRunLoopObserver 0x7f8e3be0a410 [0x109aeba40]&gt;&#123;valid = Yes, activities = 0xa0, repeats = Yes, order = 2147483647, callout = _wrapRunLoopWithAutoreleasePoolHandler (0x109c734c2), context = &lt;CFArray 0x7f8e3be03710 [0x109aeba40]&gt;&#123;type = mutable-small, count = 0, values = ()&#125;&#125;</span><br><span class="line">)&#125;,</span><br><span class="line">	timers = &lt;CFArray 0x7f8e3be02db0 [0x109aeba40]&gt;&#123;type = mutable-small, count = 1, values = (</span><br><span class="line">	0 : &lt;CFRunLoopTimer 0x7f8e3be07cc0 [0x109aeba40]&gt;&#123;valid = Yes, firing = No, interval = 0, tolerance = 0, next fire date = 481365391 (1.43280697 @ 123873776763962), callout = (Delayed Perform) UIApplication _accessibilitySetUpQuickSpeak (0x108f1b137 / 0x10a0a6256) (/Applications/Xcode 2.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/UIKit.framework/UIKit), context = &lt;CFRunLoopTimer context 0x7f8e3be09750&gt;&#125;</span><br><span class="line">)&#125;,</span><br><span class="line">	currently 481365389 (123872342741036) / soft deadline in: 1.43402291 sec (@ 123873776763962) / hard deadline in: 1.43402285 sec (@ 123873776763962)</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">	5 : &lt;CFRunLoopMode 0x7f8e3bc15610 [0x109aeba40]&gt;&#123;name = UIInitializationRunLoopMode, port set = 0x2e0b, timer port = 0x310b, </span><br><span class="line">	sources0 = &lt;CFBasicHash 0x7f8e3bc15700 [0x109aeba40]&gt;&#123;type = mutable set, count = 1,</span><br><span class="line">entries =&gt;</span><br><span class="line">	0 : &lt;CFRunLoopSource 0x7f8e3be06460 [0x109aeba40]&gt;&#123;signalled = Yes, valid = Yes, order = 0, context = &lt;CFRunLoopSource context&gt;&#123;version = 0, info = 0x7f8e3bf05930, callout = FBSSerialQueueRunLoopSourceHandler (0x10c714f5b)&#125;&#125;</span><br><span class="line">&#125;</span><br><span class="line">,</span><br><span class="line">	sources1 = &lt;CFBasicHash 0x7f8e3bc15740 [0x109aeba40]&gt;&#123;type = mutable set, count = 0,</span><br><span class="line">entries =&gt;</span><br><span class="line">&#125;</span><br><span class="line">,</span><br><span class="line">	observers = &lt;CFArray 0x7f8e3bc0ffb0 [0x109aeba40]&gt;&#123;type = mutable-small, count = 1, values = (</span><br><span class="line">	0 : &lt;CFRunLoopObserver 0x7f8e3bc0e520 [0x109aeba40]&gt;&#123;valid = Yes, activities = 0xa0, repeats = Yes, order = 2000000, callout = _ZN2CA11Transaction17observer_callbackEP19__CFRunLoopObservermPv (0x10ddb179c), context = &lt;CFRunLoopObserver context 0x0&gt;&#125;</span><br><span class="line">)&#125;,</span><br><span class="line">	timers = (null),</span><br><span class="line">	currently 481365389 (123872344018392) / soft deadline in: 1.84466202e+10 sec (@ -1) / hard deadline in: 1.84466202e+10 sec (@ -1)</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">	6 : &lt;CFRunLoopMode 0x7f8e3bd091c0 [0x109aeba40]&gt;&#123;name = kCFRunLoopCommonModes, port set = 0x3e03, timer port = 0x3f03, </span><br><span class="line">	sources0 = (null),</span><br><span class="line">	sources1 = (null),</span><br><span class="line">	observers = (null),</span><br><span class="line">	timers = (null),</span><br><span class="line">	currently 481365389 (123872344088272) / soft deadline in: 1.84466202e+10 sec (@ -1) / hard deadline in: 1.84466202e+10 sec (@ -1)</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/04/08/the_description_method_in_Objective-C/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          OC中的description方法
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+</div>
+      <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 zhaolei
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    
+
+<script>
+	var yiliaConfig = {
+		fancybox: undefined,
+		mathjax: undefined,
+		animate: undefined,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: undefined
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+  </div>
+</body>
+</html>
