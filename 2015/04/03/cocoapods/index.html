@@ -4,17 +4,23 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>zhaolei_dubai</title>
+  <title>Cocoapods的一些用法 | zhaolei_dubai</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="zhaolei_dubai">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="Podfile接着上次的Submodule讲，其实这篇和Submodule没什么太大的关系，主要说的是CocoaPods，因为最近做的项目是多人合作二期在CocoaPods上跳了很多坑，所以总结出来，以方便自己下次查看。（本人写的Blog全都是自己总结的东西，没有什么抄袭这一说，如果非要说我抄袭，xiepo我做什么事情，对不起，NO way！！！）。
+从github上把SuboduleApp cl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cocoapods的一些用法">
+<meta property="og:url" content="http://yoursite.com/2015/04/03/cocoapods/index.html">
 <meta property="og:site_name" content="zhaolei_dubai">
-<meta property="og:description">
+<meta property="og:description" content="Podfile接着上次的Submodule讲，其实这篇和Submodule没什么太大的关系，主要说的是CocoaPods，因为最近做的项目是多人合作二期在CocoaPods上跳了很多坑，所以总结出来，以方便自己下次查看。（本人写的Blog全都是自己总结的东西，没有什么抄袭这一说，如果非要说我抄袭，xiepo我做什么事情，对不起，NO way！！！）。
+从github上把SuboduleApp cl">
+<meta property="og:image" content="https://github.com/wdxgtsh/SubmoduleApp/blob/master/src/01-submodule.png?raw=true =408x380">
+<meta property="og:updated_time" content="2016-05-21T11:41:13.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="zhaolei_dubai">
-<meta name="twitter:description">
+<meta name="twitter:title" content="Cocoapods的一些用法">
+<meta name="twitter:description" content="Podfile接着上次的Submodule讲，其实这篇和Submodule没什么太大的关系，主要说的是CocoaPods，因为最近做的项目是多人合作二期在CocoaPods上跳了很多坑，所以总结出来，以方便自己下次查看。（本人写的Blog全都是自己总结的东西，没有什么抄袭这一说，如果非要说我抄袭，xiepo我做什么事情，对不起，NO way！！！）。
+从github上把SuboduleApp cl">
+<meta name="twitter:image" content="https://github.com/wdxgtsh/SubmoduleApp/blob/master/src/01-submodule.png?raw=true =408x380">
   
   
   <link rel="stylesheet" href="/css/style.css">
@@ -98,240 +104,7 @@
 	</div>
 </nav>
 
-      <div class="body-wrap">
-  
-    <article id="post-the_first_sight_of_Submodule" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/06/09/the_first_sight_of_Submodule/" class="article-date">
-  	<time datetime="2015-06-08T16:14:15.000Z" itemprop="datePublished">2015-06-09</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/06/09/the_first_sight_of_Submodule/">初识Submodule</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="初识Submodule"><a href="#初识Submodule" class="headerlink" title="初识Submodule"></a>初识Submodule</h3><p>通常，大型的工程总会被拆分成一些自工程，这样既有利于开发过程中开发难度的降低，也有利于使用现有的方案或者模块作为自工程。Git的高级功能Submodule就是完成这样一种自工程拆分和整合的工具。当然了，一些小公司或者一个公司就一个项目那就爱咋样咋样了，如果是外包公司或者相对来说规模比较大，App产品比较多（多个App具有相同模块）的公司，Submodule是一个不错的选择。举个例子：某司是一个做社交类应用的公司，而且有多个社交App，纵观当今的社交类App，不就那几个鸟样子，基本上都包含聊天，空间，登陆注册。这个时候我们就可以适当地把聊天，登陆注册，网络请求之类的模块做成Submodule。当开发第二个甚至更多个需要集成这些模块的App时，我们只需要在相应的主工程中添加对应的submodule就可以轻轻松松把上个App的登陆注册及网路请求模块拿过来用，稍微改下、或者是不需要改就可以实现登陆注册及网络请求的功能。不仅仅能节省开发的周期，也能使我们很方便的对项目进行管理。</p>
-<p>好了，废话也不再多说，直接上干货。<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="hidden" href="/2015/06/09/the_first_sight_of_Submodule/#more">undefined >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-upload_file_to_Github" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/04/15/upload_file_to_Github/" class="article-date">
-  	<time datetime="2015-04-15T07:18:57.000Z" itemprop="datePublished">2015-04-15</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/04/15/upload_file_to_Github/">上传代码到Github</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-新建Xcode工程-GitUploadTest"><a href="#1-新建Xcode工程-GitUploadTest" class="headerlink" title="1.新建Xcode工程(GitUploadTest)"></a>1.新建Xcode工程(GitUploadTest)</h3><h3 id="2-切换到工程目录"><a href="#2-切换到工程目录" class="headerlink" title="2.切换到工程目录"></a>2.切换到工程目录</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$cd .../GitUploadTest</span><br></pre></td></tr></table></figure>
-<h3 id="3-初始化代码仓库"><a href="#3-初始化代码仓库" class="headerlink" title="3.初始化代码仓库"></a>3.初始化代码仓库</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$git init</span><br></pre></td></tr></table></figure>
-<h3 id="4-添加文件到仓库的缓存区（从工作目录添加到缓存区）。"><a href="#4-添加文件到仓库的缓存区（从工作目录添加到缓存区）。" class="headerlink" title="4.添加文件到仓库的缓存区（从工作目录添加到缓存区）。"></a>4.添加文件到仓库的缓存区（从工作目录添加到缓存区）。</h3>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="hidden" href="/2015/04/15/upload_file_to_Github/#more">undefined >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-the_description_method_in_Objective-C" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/04/08/the_description_method_in_Objective-C/" class="article-date">
-  	<time datetime="2015-04-08T10:18:57.000Z" itemprop="datePublished">2015-04-08</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/04/08/the_description_method_in_Objective-C/">OC中的description方法</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在APP的开发过程中，经常要打印并查看对象的信息，比较low的方法是编写代码，把对象的全部的属性都输出到日志中。最常用的做法是NSLog一下。<br>在构建需要打印到日志的字符串时，object对象会收到description消息，该方法所返回的描述信息将取代“格式字符串”里的“%@”等，比如：我们要打印数组时。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NSLog(@&quot;arr = %@&quot;, arr);</span><br></pre></td></tr></table></figure>
-<p>控制台会输入：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">arr = (</span><br><span class="line">	&quot;我是数组中的元素&quot;</span><br><span class="line">	&quot;我也是数组中得元素&quot;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="hidden" href="/2015/04/08/the_description_method_in_Objective-C/#more">undefined >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-runloop" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/04/03/runloop/" class="article-date">
-  	<time datetime="2015-04-03T10:18:57.000Z" itemprop="datePublished">2015-04-03</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/04/03/runloop/">深入了解RunLoop</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="RunLoop"><a href="#RunLoop" class="headerlink" title="RunLoop"></a>RunLoop</h3><p><img src="https://github.com/wdxgtsh/Personal/blob/master/blogImages/runloop/01-runloop.jpg?raw=true" alt="image"></p>
-<h3 id="RunLoop相关类"><a href="#RunLoop相关类" class="headerlink" title="RunLoop相关类"></a>RunLoop相关类</h3><p>由于Foundation只公开了NSRunLoop，其它的和RunLoop相关的类没有开源，研究RunLoop的底层实现还是需要从Core Foundation开始。</p>
-<p>Core Foundation中关于RunLoop的几个类：</p>
-<ul>
-<li>CFRunLoopRef</li>
-<li>CFRunLoopModeRef</li>
-<li>CFRunLoopSourceRef</li>
-<li>CFRunLoopTimerRef</li>
-<li>CFRunLoopObserverRef</li>
-</ul>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="hidden" href="/2015/04/03/runloop/#more">undefined >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-cocoapods" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-cocoapods" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
       <a href="/2015/04/03/cocoapods/" class="article-date">
@@ -345,12 +118,19 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/04/03/cocoapods/">Cocoapods的一些用法</a>
+    <h1 class="article-title" itemprop="name">
+      Cocoapods的一些用法
     </h1>
   
 
       </header>
+      
+      <div class="article-info article-info-post">
+        
+        
+
+        <div class="clearfix"></div>
+      </div>
       
     
     <div class="article-entry" itemprop="articleBody">
@@ -376,16 +156,23 @@
       
     </div>
     
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
   </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/04/03/runloop/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          深入了解RunLoop
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
   
 </article>
 
@@ -396,9 +183,6 @@
 
 
 
-
-  
-  
 </div>
       <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>
@@ -425,8 +209,8 @@
 		fancybox: undefined,
 		mathjax: undefined,
 		animate: undefined,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
